@@ -40,8 +40,8 @@ To customize the GLAuth configuration:
 
 ## Customization
 
-- Update passwords and user configurations before deploying to production.
-- Self-signed certificates are generated for LDAPS. For production, use proper certificates.
+- Update passwords and user configurations before deploying.
+- Self-signed certificates are generated for LDAPS. Don't use them in production.
 - The included configuration uses default test passwords and should **NOT** be used in production.
 ⚠️ **Important**: 
 
