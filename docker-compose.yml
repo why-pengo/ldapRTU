@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  glauth:
+    image: ubuntu/glauth:2-22.04_stable
+    container_name: glauth
+    restart: unless-stopped
+    ports:
+      - "3893:3893"  # LDAP port
+      - "3894:3894"  # LDAPS port
+      - "5555:5555"  # API port (optional)
+    volumes:
+      - ./glauth.cfg:/app/config/glauth.cfg:ro
+      - ./certs/glauth.crt:/app/config/glauth.crt:ro
+      - ./certs/glauth.key:/app/config/glauth.key:ro
+    working_dir: /app/config
+    command: ["-c", "/app/config/glauth.cfg"]
+    networks:
+      - glauth-network
+
+networks:
+  glauth-network:
+    driver: bridge
+
