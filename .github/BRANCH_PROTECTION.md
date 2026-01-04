@@ -38,7 +38,7 @@ To enable branch protection on GitHub, follow these steps:
 The repository includes a GitHub Actions workflow (`.github/workflows/test.yml`) that:
 
 1. **Generates self-signed certificates** for LDAPS testing
-2. **Starts the GLAuth service** using docker-compose
+2. **Starts the GLAuth service** using docker compose
 3. **Verifies service health** by checking container status
 4. **Runs LDAP connectivity tests** using the test-ldap.sh script
 5. **Performs LDAP search queries** to validate functionality

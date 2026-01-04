@@ -23,21 +23,21 @@ jobs:
 
     - name: Start GLAuth service
       run: |
-        docker-compose up -d
+        docker compose up -d
         echo "Waiting for GLAuth to start..."
         sleep 10
 
     - name: Check service health
       run: |
-        docker-compose ps
-        docker-compose logs glauth
+        docker compose ps
+        docker compose logs glauth
 
     - name: Verify services are running
       run: |
         # Check if container is running
-        if ! docker-compose ps | grep -q "Up"; then
+        if ! docker compose ps | grep -q "Up"; then
           echo "ERROR: GLAuth container is not running"
-          docker-compose logs glauth
+          docker compose logs glauth
           exit 1
         fi
         echo "✓ GLAuth container is running"
@@ -73,12 +73,11 @@ jobs:
       if: failure()
       run: |
         echo "=== Docker Compose Logs ==="
-        docker-compose logs glauth
+        docker compose logs glauth
         echo "=== Container Status ==="
-        docker-compose ps
+        docker compose ps
 
     - name: Cleanup
       if: always()
       run: |
-        docker-compose down -v
-
+        docker compose down -v

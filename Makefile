@@ -19,12 +19,12 @@ help:
 # Build/pull the Docker image
 build:
 	@echo "Building/pulling GLAuth image..."
-	docker-compose pull
+	docker compose pull
 
 # Start the service
 up: certs
 	@echo "Starting GLAuth service..."
-	docker-compose up -d
+	docker compose up -d
 	@echo "GLAuth is running!"
 	@echo "LDAP:  ldap://localhost:3893"
 	@echo "LDAPS: ldaps://localhost:3894"
@@ -33,16 +33,16 @@ up: certs
 # Stop the service
 down:
 	@echo "Stopping GLAuth service..."
-	docker-compose down
+	docker compose down
 
 # Restart the service
 restart:
 	@echo "Restarting GLAuth service..."
-	docker-compose restart
+	docker compose restart
 
 # Show logs
 logs:
-	docker-compose logs -f glauth
+	docker compose logs -f glauth
 
 # Test LDAP connectivity
 test:
@@ -51,7 +51,7 @@ test:
 # Clean up everything
 clean:
 	@echo "Cleaning up..."
-	docker-compose down -v
+	docker compose down -v
 	@echo "Cleanup complete!"
 
 # Generate self-signed certificates
@@ -66,4 +66,3 @@ certs:
 	else \
 		echo "Certificates already exist in ./certs/"; \
 	fi
-
