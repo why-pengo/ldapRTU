@@ -3,6 +3,10 @@
 - [GLAuth Documentation](https://glauth.github.io/)
 - [GLAuth GitHub Repository](https://github.com/glauth/glauth)
 
+## Credits
+
+This repository was created with assistance from **GitHub Copilot**, an AI pair programmer that helped structure the Docker setup, configuration files, documentation, and automation scripts.
+
 ## References
 
 ```bash
