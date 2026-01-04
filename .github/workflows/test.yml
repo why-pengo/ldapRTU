@@ -64,12 +64,15 @@ jobs:
 
     - name: Test LDAP bind authentication
       run: |
-        # Test user authentication - use ldapwhoami which only requires bind
-        ldapwhoami -x -H ldap://localhost:3893 \
+        # Test user authentication with johndoe who has search permissions for superheros OU
+        ldapsearch -x -H ldap://localhost:3893 \
           -D 'cn=johndoe,ou=superheros,dc=glauth,dc=com' \
-          -w 'dogood'
+          -w 'dogood' \
+          -b 'ou=superheros,dc=glauth,dc=com' \
+          -s base \
+          '(objectClass=*)' \
+          ou
         
-        # If the above succeeds, the authentication worked
         echo "✓ User authentication successful"
 
     - name: Show logs on failure
