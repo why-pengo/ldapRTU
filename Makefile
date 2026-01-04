@@ -12,7 +12,6 @@ help:
 	@echo "  down      - Stop the GLAuth service"
 	@echo "  restart   - Restart the GLAuth service"
 	@echo "  logs      - Show service logs"
-	@echo "  test      - Test LDAP connectivity"
 	@echo "  clean     - Stop and remove containers, networks"
 	@echo "  certs     - Generate self-signed certificates for LDAPS"
 	@echo ""

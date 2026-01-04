@@ -1,0 +1,84 @@
+name: Test GLAuth Configuration
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Generate certificates
+      run: |
+        mkdir -p certs
+        openssl req -x509 -newkey rsa:4096 -keyout certs/glauth.key -out certs/glauth.crt -days 365 -nodes -subj '/CN=glauth'
+        chmod 644 certs/glauth.crt
+        chmod 600 certs/glauth.key
+
+    - name: Start GLAuth service
+      run: |
+        docker-compose up -d
+        echo "Waiting for GLAuth to start..."
+        sleep 10
+
+    - name: Check service health
+      run: |
+        docker-compose ps
+        docker-compose logs glauth
+
+    - name: Verify services are running
+      run: |
+        # Check if container is running
+        if ! docker-compose ps | grep -q "Up"; then
+          echo "ERROR: GLAuth container is not running"
+          docker-compose logs glauth
+          exit 1
+        fi
+        echo "✓ GLAuth container is running"
+
+    - name: Install LDAP utilities
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ldap-utils
+
+    - name: Run LDAP connectivity tests
+      run: |
+        chmod +x test-ldap.sh
+        ./test-ldap.sh
+
+    - name: Test LDAP search
+      run: |
+        # Test basic LDAP search
+        ldapsearch -x -H ldap://localhost:3893 \
+          -b 'dc=glauth,dc=com' \
+          -D 'cn=serviceuser,ou=svcaccts,dc=glauth,dc=com' \
+          -w 'mysecret' \
+          '(objectClass=posixAccount)' \
+          cn mail
+
+    - name: Test LDAP bind authentication
+      run: |
+        # Test user authentication
+        ldapwhoami -x -H ldap://localhost:3893 \
+          -D 'cn=johndoe,ou=superheros,dc=glauth,dc=com' \
+          -w 'dogood'
+
+    - name: Show logs on failure
+      if: failure()
+      run: |
+        echo "=== Docker Compose Logs ==="
+        docker-compose logs glauth
+        echo "=== Container Status ==="
+        docker-compose ps
+
+    - name: Cleanup
+      if: always()
+      run: |
+        docker-compose down -v
+
